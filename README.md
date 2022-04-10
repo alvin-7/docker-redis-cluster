@@ -166,8 +166,14 @@ Be default, it is going to launch 3 masters with 1 slave per master. This is con
 | `INITIAL_PORT`       |    7000 |
 | `MASTERS`            |       3 |
 | `SLAVES_PER_MASTER`  |       1 | 
+| `REDIS_PASSWD`       |  secret | 
+| `REDIS_PERSIST`      |       0 | 
 
 Therefore, the total number of nodes (`NODES`) is going to be `$MASTERS * ( $SLAVES_PER_MASTER  + 1 )` and ports are going to range from `$INITIAL_PORT` to `$INITIAL_PORT + NODES - 1`.
+
+The `REDIS_PASSWD` can set redis password.
+
+The `REDIS_PERSIST` can use rdb/aof file(if specify volumes), otherwise remove db file when start.
 
 At the docker-compose provided by this repository, ports 7000-7050 are already mapped to the hosts'. Either if you need more than 50 nodes in total or if you need to change the initial port number, you should override those values.
 
