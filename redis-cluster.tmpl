@@ -4,4 +4,6 @@ cluster-enabled yes
 cluster-config-file nodes.conf
 cluster-node-timeout 5000
 appendonly yes
+masterauth ${REDIS_PASSWD}
+requirepass ${REDIS_PASSWD}
 dir /redis-data/${PORT}
