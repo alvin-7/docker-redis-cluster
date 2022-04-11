@@ -1,7 +1,7 @@
 version: '2'
 services:
   redis-cluster:
-    image: alvinhub/redis-cluster:5.0.0
+    image: alvinhub/redis-cluster:6.2.6
     environment:
      IP: ${REDIS_CLUSTER_IP}
      SENTINEL: ${REDIS_USE_SENTINEL}
@@ -9,7 +9,7 @@ services:
     build:
       context: .
       args:
-        redis_version: '5.0.0'
+        redis_version: '6.2.6'
     hostname: server
     ports:
       - '7000-7050:7000-7050'

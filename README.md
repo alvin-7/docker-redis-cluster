@@ -28,6 +28,16 @@
 * Redis Password
 * Redis Persist on docker volumes
 
+# Available tags
+
+Redis 6.2.x versions:
+
+- 6.2.6
+
+Redis 5.0.x versions:
+
+- 5.0.0
+
 ***
 
 [![Docker Stars](https://img.shields.io/docker/stars/grokzen/redis-cluster.svg)](https://hub.docker.com/r/grokzen/redis-cluster/)
