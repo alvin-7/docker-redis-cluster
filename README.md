@@ -1,5 +1,35 @@
 # docker-redis-cluster
 
+## alvinhub/redis-cluster 
+
+> Fork from Grokzen
+
+[alvinhub/redis-cluster](https://hub.docker.com/r/alvinhub/redis-cluster)
+
+### Features
+
+    version: '3.7'
+    services:
+      redis-cluster:
+        images: alvinhub/redis-cluster:5.0.0
+        ...
+        environment:
+          INITIAL_PORT: 7000
+          MASTERS: 3
+          SLAVES_PER_MASTER: 1
+          REDIS_PASSWD: 'secret'
+          REDIS_PERSIST: 1
+        volumes:
+          - /redis-data:/redis-data
+        ports:
+          - 7000-7005:7000-7005
+
+
+* Redis Password
+* Redis Persist on docker volumes
+
+***
+
 [![Docker Stars](https://img.shields.io/docker/stars/grokzen/redis-cluster.svg)](https://hub.docker.com/r/grokzen/redis-cluster/)
 [![Docker Pulls](https://img.shields.io/docker/pulls/grokzen/redis-cluster.svg)](https://hub.docker.com/r/grokzen/redis-cluster/)
 [![Build Status](https://travis-ci.org/Grokzen/docker-redis-cluster.svg?branch=master)](https://travis-ci.org/Grokzen/docker-redis-cluster)
@@ -166,7 +196,7 @@ Be default, it is going to launch 3 masters with 1 slave per master. This is con
 | `INITIAL_PORT`       |    7000 |
 | `MASTERS`            |       3 |
 | `SLAVES_PER_MASTER`  |       1 | 
-| `REDIS_PASSWD`       |  secret | 
+| `REDIS_PASSWD`       |         | 
 | `REDIS_PERSIST`      |       0 | 
 
 Therefore, the total number of nodes (`NODES`) is going to be `$MASTERS * ( $SLAVES_PER_MASTER  + 1 )` and ports are going to range from `$INITIAL_PORT` to `$INITIAL_PORT + NODES - 1`.

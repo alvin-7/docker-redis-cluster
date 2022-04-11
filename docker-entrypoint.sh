@@ -31,7 +31,7 @@ if [ "$1" = 'redis-cluster' ]; then
     fi
 
     if [ -z "$REDIS_PASSWD" ]; then # Default to redis password
-      REDIS_PASSWD='passwd'
+      REDIS_PASSWD=''
     fi
 
     max_port=$(($INITIAL_PORT + $MASTERS * ( $SLAVES_PER_MASTER  + 1 ) - 1))
@@ -62,11 +62,17 @@ if [ "$1" = 'redis-cluster' ]; then
       fi
 
 
+      REDIS_CONF_FILE=/redis-conf/${port}/redis.conf
       if [ "$port" -lt "$first_standalone" ]; then
-        PORT=${port} BIND_ADDRESS=${BIND_ADDRESS} REDIS_PASSWD=${REDIS_PASSWD} envsubst < /redis-conf/redis-cluster.tmpl > /redis-conf/${port}/redis.conf
+        PORT=${port} BIND_ADDRESS=${BIND_ADDRESS} envsubst < /redis-conf/redis-cluster.tmpl > ${REDIS_CONF_FILE}
         nodes="$nodes $IP:$port"
       else
-        PORT=${port} BIND_ADDRESS=${BIND_ADDRESS} REDIS_PASSWD=${REDIS_PASSWD} envsubst < /redis-conf/redis.tmpl > /redis-conf/${port}/redis.conf
+        PORT=${port} BIND_ADDRESS=${BIND_ADDRESS} envsubst < /redis-conf/redis.tmpl > ${REDIS_CONF_FILE}
+      fi
+
+      if [ ! -z "${REDIS_PASSWD}" ]; then
+        echo masterauth ${REDIS_PASSWD} >> ${REDIS_CONF_FILE}
+        echo requirepass ${REDIS_PASSWD} >> ${REDIS_CONF_FILE}
       fi
 
       if [ "$port" -lt $(($INITIAL_PORT + $MASTERS)) ]; then
@@ -89,13 +95,18 @@ if [ "$1" = 'redis-cluster' ]; then
     #
     /redis/src/redis-cli --version | grep -E "redis-cli 3.0|redis-cli 3.2|redis-cli 4.0"
 
+    REDIS_PASSWD_CMD=''
+    if [ ! -z "${REDIS_PASSWD}" ]; then
+      REDIS_PASSWD_CMD='-a ${REDIS_PASSWD}'
+    fi
+
     if [ $? -eq 0 ]
     then
       echo "Using old redis-trib.rb to create the cluster"
-      echo "yes" | eval ruby /redis/src/redis-trib.rb create --replicas "$SLAVES_PER_MASTER" "$nodes" -a ${REDIS_PASSWD}
+      echo "yes" | eval ruby /redis/src/redis-trib.rb create --replicas "$SLAVES_PER_MASTER" "$nodes" ${REDIS_PASSWD_CMD}
     else
       echo "Using redis-cli to create the cluster"
-      echo "yes" | eval /redis/src/redis-cli --cluster create --cluster-replicas "$SLAVES_PER_MASTER" "$nodes" -a ${REDIS_PASSWD}
+      echo "yes" | eval /redis/src/redis-cli --cluster create --cluster-replicas "$SLAVES_PER_MASTER" "$nodes" ${REDIS_PASSWD_CMD}
     fi
 
     if [ "$SENTINEL" = "true" ]; then
