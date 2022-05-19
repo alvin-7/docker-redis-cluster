@@ -1,4 +1,4 @@
-version: '2'
+version: '3.8'
 services:
   redis-cluster:
     image: alvinhub/redis-cluster:6.2.6
@@ -10,7 +10,7 @@ services:
       context: .
       args:
         redis_version: '6.2.6'
-    hostname: server
+    hostname: redis-cluster
     ports:
-      - '7000-7050:7000-7050'
-      - '5000-5010:5000-5010'
+      - '7000-7050'
+      - '5000-5010'

@@ -23,4 +23,4 @@ bash:
 	docker-compose exec redis-cluster /bin/bash
 
 cli:
-	docker-compose exec redis-cluster /redis/src/redis-cli -p 7000
+	docker-compose exec redis-cluster /redis/src/redis-cli -c -p 7000
